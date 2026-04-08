@@ -1,0 +1,78 @@
+#!/bin/bash
+# Create all items with exact dates and permissions
+
+# 0: directory dr-------x  1986-01-05 00:00
+mkdir -p 0
+touch -t 198601050000.00 0
+chmod 001 0
+
+# 1: -r------w-  1986-11-13 00:01
+touch -t 198611130001.00 1
+chmod 200 1   # owner: r-- (4? No: r=4 but here owner r=4? Wait r------w- is owner: r-- (4), group: --- (0), others: -w- (2) → 402 octal? No.
+
+chmod uses octal: user/group/other.
+
+Permissions:
+- r------w- 
+  owner: r--   = 4
+  group: ---   = 0
+  other: -w-   = 2
+So `chmod 402 1`
+
+Yes.
+
+# Let's list all correctly:
+
+echo "Creating files..."
+
+# 0 - directory dr-------x
+mkdir 0
+touch -t 198601050000 0
+chmod 001 0
+
+# 1 - -r------w-
+touch -t 198611130001 1
+chmod 402 1
+
+# 2 - -rw----r--
+touch -t 198803050010 2
+chmod 604 2
+
+# 3 - symlink lrwxrwxrwx  3 -> 0
+ln -s 0 3
+touch -t 199002160011 3
+
+# 4 - -r-x--x---
+touch -t 199010070100 4
+chmod 510 4     # owner r-x=5, group --x=1, other ---=0 → 510
+
+# 5 - -r--rw----
+touch -t 199011070101 5
+chmod 460 5     # owner r--=4, group -rw=6, other ---=0 → 460
+
+# 6 - -r--rw----
+touch -t 199102080110 6
+chmod 460 6
+
+# 7 - -r-x--x---
+touch -t 199103080111 7
+chmod 510 7
+
+# 8 - -rw----r--
+touch -t 199405201000 8
+chmod 604 8
+
+# 9 - -r------w-
+touch -t 199406101001 9
+chmod 402 9
+
+# A - directory dr-------x
+mkdir A
+touch -t 199504101010 A
+chmod 001 A
+
+echo "Files and directories created."
+
+# Now verify (on Linux)
+echo "Your ls output:"
+TZ=utc ls -l --time-style='+%F %R' | sed 1d | awk '{print $1, $6, $7, $8, $9, $10}'
