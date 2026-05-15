@@ -22,6 +22,6 @@ func Printcomb2() {
 	}
 	fmt.Printf("\n")
 }
-func main() {
-	Printcomb2()
-}
+// func main() {
+// 	Printcomb2()
+// }

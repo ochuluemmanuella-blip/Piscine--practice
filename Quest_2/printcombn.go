@@ -31,8 +31,8 @@ func PrintCombN(n int) {
 	fmt.Printf("\n")
 }
 
-func main() {
-	PrintCombN(1)
-	PrintCombN(3)
-	PrintCombN(9)
-}
+// func main() {
+// 	PrintCombN(1)
+// 	PrintCombN(3)
+// 	PrintCombN(9)
+// }
